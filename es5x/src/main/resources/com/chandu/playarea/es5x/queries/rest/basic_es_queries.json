@@ -1,0 +1,79 @@
+# Cluster health
+GET _cat/health
+
+# List all nodes
+GET _cat/nodes
+
+# List all indices
+GET _cat/indices
+
+# Create an Index
+PUT /customer?pretty
+
+# Index a document with manual ID
+PUT /customer/sample/1?pretty
+{
+"name": "John Doe"
+}
+
+# Index a document with optional ID
+PUT /customer/sample?pretty
+{
+"name": "John Doe"
+}
+
+# Retrieve a document
+GET /customer/sample/1?pretty
+
+# Delete an Index
+DELETE /customer?pretty
+
+# <REST Verb> /<Index>/<Type>/<ID>
+
+# Modify a document - Version gets updated
+PUT /customer/sample/1?pretty
+{
+"name": "John Doe modifed"
+}
+
+# Update a document
+POST /customer/sample/1/_update?pretty
+{
+"doc": {"name": "John Doe updated"}
+}
+
+# Update a document by adding a new field
+POST /customer/sample/1/_update?pretty
+{
+"doc": {"name": "John Doe updated", "age":25}
+}
+
+# Update a document using script
+POST /customer/sample/1/_update?pretty
+{
+"script": "ctx._source.age +=5"
+}
+
+
+# Delete a document
+DELETE /customer/sample/2?pretty
+
+# Batch processing - Index multiple documents
+POST /customer/sample/_bulk?pretty
+{"index":{"_id":"2"}}
+{"name": "Mark"}
+{"index":{"_id":"3"}}
+{"name": "Kathy"}
+
+
+# Batch processing - Multiple operations on documents
+POST /customer/sample/_bulk?pretty
+{"index":{"_id":"4"}}
+{"name": "Jason"}
+{"update":{"_id":"2"}}
+{"doc":{"name": "Monica Geller"}}
+{"delete":{"_id":3}}
+
+
+# Query for all documents available under specific document type
+GET /customer/sample/_search?pretty
