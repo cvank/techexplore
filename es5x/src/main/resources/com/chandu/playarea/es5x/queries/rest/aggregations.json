@@ -1,0 +1,167 @@
+# group accounts by state, displays source along with aggregated results
+GET /bank/_search
+{
+"aggs": {
+"group_by_state": {
+"terms": {
+"field": "state.keyword"
+}
+}
+}
+}
+
+# group accounts by state, displays no source when size =0 , but only aggregated results of size 10 by default, unless specified
+GET /bank/_search
+{
+"aggs": {
+"group_by_state": {
+"terms": {
+"field": "state.keyword"
+}
+}
+}, "size": 0
+}
+
+# group accounts by state, displays no source when size =0 , but only aggregated results of specified size.
+GET /bank/_search
+{
+"aggs": {
+"group_by_state": {
+"terms": {
+"field": "state.keyword",
+"size": 100
+}
+}
+}, "size": 0
+
+# avergae account balance by state
+GET /bank/_search
+{
+"aggs": {
+"group_by_state": {
+"terms": {
+"field": "state.keyword"
+},
+"aggs": {
+"average_balance": {
+"avg": {
+"field": "balance"
+}
+}
+}
+}
+}, "size": 0
+}
+
+# sort based on avergae balance
+GET /bank/_search
+{
+"aggs": {
+"group_by_state": {
+"terms": {
+"field": "state.keyword",
+"order": {
+"average_balance": "desc"
+}
+},
+"aggs": {
+"average_balance": {
+"avg": {
+"field": "balance"
+
+}
+}
+}
+}
+}, "size": 0
+}
+
+# group by age, then by gender and finally get average account balance by age and gender
+GET /bank/_search
+{
+"aggs": {
+"group_by_age": {
+"range":{
+"field": "age",
+"ranges": [
+{
+"from": 20,
+"to": 30
+},
+{
+"from": 30,
+"to": 40
+},
+{
+"from": 40,
+"to": 50
+}
+]
+},
+"aggs": {
+"group_by_gender": {
+"terms": {
+"field": "gender.keyword"
+},
+"aggs": {
+"average_balance": {
+"avg": {
+"field": "balance"
+}
+}
+}
+}
+}
+}
+},
+"size": 0
+}
+
+# group by age, then by gender and finally get average account balance by age and then by gender and then by state.
+
+GET /bank/_search
+{
+"aggs": {
+"group_by_age": {
+"range": {
+"field": "age",
+"ranges": [
+{
+"from": 20,
+"to": 30
+},
+{
+"from": 30,
+"to": 40
+},
+{
+"from": 40,
+"to": 50
+}
+]
+},
+"aggs": {
+"group_by_gender": {
+"terms": {
+"field": "gender.keyword"
+},
+"aggs": {
+"group_by_state": {
+"terms": {
+"field": "state.keyword"
+},
+"aggs": {
+"average_balance": {
+"avg": {
+"field": "balance"
+}
+}
+}
+}
+}
+}
+}
+}
+},
+"size": 0
+}

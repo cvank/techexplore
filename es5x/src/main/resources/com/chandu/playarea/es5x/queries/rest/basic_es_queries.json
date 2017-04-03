@@ -1,3 +1,5 @@
+GET /
+
 # Cluster health
 GET _cat/health
 

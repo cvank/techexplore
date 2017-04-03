@@ -1,0 +1,56 @@
+# filter on match all
+
+GET bank/_search
+{
+"query": {"bool": {
+"must": [
+{"match_all": {}}
+],"filter": {"range": {
+"balance": {
+"gte": 2000,
+"lte": 30000
+}
+}}
+}}
+}
+
+# filter - exists
+
+GET bank/_search
+{
+"query": {
+"bool": {
+"must": [
+{
+"match_all": {}
+}
+],
+"filter": {
+"exists": {
+"field": "balance"
+}
+}
+}
+}
+}
+
+# filter- ids
+GET bank/_search
+{
+"query": {
+"bool": {
+"must": [
+{
+"match_all": {}
+}
+],
+"filter": {
+"ids": {
+"values": [
+"1"
+]
+}
+}
+}
+}
+}
