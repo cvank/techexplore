@@ -1,0 +1,175 @@
+# request URI
+
+GET /bank/_search?q=*&sort=account_number:asc&pretty
+
+# Request body
+GET /bank/_search
+{
+"query": {"match_all": {}}
+, "sort": [
+{
+"account_number": {
+"order": "asc"
+}
+}
+]
+}
+
+# Query DSL - making use of parameters - Size (Default is 10)
+GET /bank/_search
+{
+"query": {"match_all": {}},
+"size": 2
+}
+
+# Query DSL - making use of parameters - Specify range
+GET /bank/_search
+{
+"query": {"match_all": {}},
+"from": 50,
+"size": 20
+
+}
+
+# Query DSL - limit source fields - by default all fields will be returned.
+
+GET /bank/_search
+{
+"query": {"match_all": {}},
+"_source": "account_number"
+
+}
+
+GET /bank/_search
+{
+"query": {"match_all": {}},
+"_source": ["account_number", "balance"]
+
+}
+
+# Get account numbers in descending order of balance
+GET /bank/_search
+{
+"query": {"match_all": {}},
+"_source": "account_number",
+"sort": [
+{
+"balance": {
+"order": "desc"
+}
+}
+]
+
+
+# match query - Looks for match on the given field
+
+GET /bank/_search
+{
+"query": {"match": {
+"account_number": "1"
+}}
+}
+
+# Returns addresses containing word 'mill'.
+GET /bank/_search
+{
+"query": {"match": {
+"address": "mill"
+}},
+"_source": "address"
+}
+
+# Returns addresses with words containing either mill or lane.
+GET /bank/_search
+{
+"query": {"match": {
+"address": "mill lane"
+}},
+"_source": "address"
+}
+
+# match phrase - Looks for matching entire phrase
+GET /bank/_search
+{
+"query": {"match_phrase": {
+"address": "mill lane"
+}},
+"_source": "address"
+}
+
+# bool query - multiple match queries
+GET /bank/_search
+{
+"query": {
+"bool": {
+"must": [
+{
+"match": {
+"address": "mill"
+}
+},
+{
+"match": {
+"address": "lane"
+}
+}
+]
+}
+}
+}
+
+# Use bool with must and must not - displays adresses which contains world mil but not lane.
+GET /bank/_search
+{
+"query": {
+"bool": {
+"must": [
+{
+"match": {
+"address": "mill"
+}
+}
+],
+"must_not": [
+{
+"match": {
+"address": "lane"
+}
+}
+]
+}
+}
+}
+
+
+# bool query with should match (works as 'or')
+GET /bank/_search
+{
+"query": {
+"bool": {
+"should": [
+{
+"match": {
+"address": "mill"
+}
+},{"match": {
+"address": "lane"
+}}
+]
+}
+},"_source": "address"
+}
+
+GET /bank/_search
+{
+"query": {
+"bool": {
+"must": [
+{ "match": { "age": "40" } }
+],
+"must_not": [
+{ "match": { "state": "ID" } }
+]
+}
+},"_source": ["age","state"]
+}
